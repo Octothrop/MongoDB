@@ -1,0 +1,166 @@
+myDb> drop myDb;
+Uncaught:
+
+myDB> db.students.find().pretty();
+[
+  { _id: 1, name: 'Ananya', location: 'Udupi', hobbies: 'Read' },
+  { _id: 2, name: 'Avani', location: 'Kundapura', hobbies: 'Write' }
+]
+myDB> db.student.find({_id:2}).pretty();
+
+myDB> db.students.find({_id:2}).pretty();
+[ { _id: 2, name: 'Avani', location: 'Kundapura', hobbies: 'Write' } ]
+myDB> db.students.update({_id:2},{$set:{hobbies:"Valorant"}});
+DeprecationWarning: Collection.update() is deprecated. Use updateOne, updateMany, or bulkWrite.
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+myDB> db.students.find({_id:2}).pretty();
+[
+  { _id: 2, name: 'Avani', location: 'Kundapura', hobbies: 'Valorant' }
+]
+
+myDB> show dbs;
+admin    40.00 KiB
+config  108.00 KiB
+local    72.00 KiB
+myDB     72.00 KiB
+
+myDB> show collections;
+students
+
+myDB> db.students.replaceOne({_id: 3, name:"Avisha", location:"Karkala", hobbies:"Sing"});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+
+myDB> db.students.find({_id:2}).pretty();
+[
+  { _id: 2, name: 'Avani', location: 'Kundapura', hobbies: 'Valorant' }
+]
+
+myDB> db.students.find().pretty();
+[
+  { _id: 1, name: 'Ananya', location: 'Udupi', hobbies: 'Read' },
+  { _id: 2, name: 'Avani', location: 'Kundapura', hobbies: 'Valorant' }
+]
+
+myDB> db.students.remove({name: 'Ananya'});
+DeprecationWarning: Collection.remove() is deprecated. Use deleteOne, deleteMany, findOneAndDelete, or bulkWrite.
+{ acknowledged: true, deletedCount: 1 }
+
+myDB> db.students.find().pretty();
+[
+  { _id: 2, name: 'Avani', location: 'Kundapura', hobbies: 'Valorant' }
+]
+
+myDB> db.students.insert({_id:1, name:"Ananya", location:"Udupi", hobbies:"Read"});
+{ acknowledged: true, insertedIds: { '0': 1 } }
+
+myDB> db.students.find().pretty();
+[
+  { _id: 2, name: 'Avani', location: 'Kundapura', hobbies: 'Valorant' },
+  { _id: 1, name: 'Ananya', location: 'Udupi', hobbies: 'Read' }
+]
+
+myDB> db.students.update({_id:2}, {$unset:{Location:"Kundapura"}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+
+myDB> db.students.find().pretty();
+[
+  { _id: 2, name: 'Avani', location: 'Kundapura', hobbies: 'Valorant' },
+  { _id: 1, name: 'Ananya', location: 'Udupi', hobbies: 'Read' }
+]
+
+myDB> db.students.update({_id:2}, {$unset:{Location:'Kundapura'}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+
+myDB> db.students.find().pretty();
+[
+  { _id: 2, name: 'Avani', location: 'Kundapura', hobbies: 'Valorant' },
+  { _id: 1, name: 'Ananya', location: 'Udupi', hobbies: 'Read' }
+]
+
+myDB> db.students.find().pretty();
+[
+  { _id: 2, name: 'Avani', hobbies: 'Valorant' },
+  { _id: 1, name: 'Ananya', location: 'Udupi', hobbies: 'Read' }
+]
+
+myDB> db.students.find({hobbies: 'Valorant'});
+[ { _id: 2, name: 'Avani', hobbies: 'Valorant' } ]
+
+myDB> db.students.insertOne({_id: 3, name:"Avisha", location:"Karkala", hobbies:"Sing"});
+{ acknowledged: true, insertedId: 3 }
+
+myDB> db.students.find().pretty();
+[
+  { _id: 2, name: 'Avani', hobbies: 'Valorant' },
+  { _id: 1, name: 'Ananya', location: 'Udupi', hobbies: 'Read' },
+  { _id: 3, name: 'Avisha', location: 'Karkala', hobbies: 'Sing' }
+]
+
+myDB> db.students.update({_id:2}, {$set:{location:'Kundapura'}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+
+myDB> db.students.find().pretty();
+[
+  { _id: 2, name: 'Avani', hobbies: 'Valorant', location: 'Kundapura' },
+  { _id: 1, name: 'Ananya', location: 'Udupi', hobbies: 'Read' },
+  { _id: 3, name: 'Avisha', location: 'Karkala', hobbies: 'Sing' }
+]
+
+myDB> db.students.find({}, {name:1, _id:0});
+[ { name: 'Avani' }, { name: 'Ananya' }, { name: 'Avisha' } ]
+
+myDB> db.students.find({}, {name:1});
+[
+  { _id: 2, name: 'Avani' },
+  { _id: 1, name: 'Ananya' },
+  { _id: 3, name: 'Avisha' }
+]
+
+myDB> db.students.find({}, {name:1, hobbies:1, _id:0});
+[
+  { name: 'Avani', hobbies: 'Valorant' },
+  { name: 'Ananya', hobbies: 'Read' },
+  { name: 'Avisha', hobbies: 'Sing' }
+]
+
+myDB> db.students.find({_id: {$gt: 2}});
+[ { _id: 3, name: 'Avisha', location: 'Karkala', hobbies: 'Sing' } ]
+
+myDB> db.students.find({hobbies: {$ne: 'Valorant'}});
+[
+  { _id: 1, name: 'Ananya', location: 'Udupi', hobbies: 'Read' },
+  { _id: 3, name: 'Avisha', location: 'Karkala', hobbies: 'Sing' }
+]
+
+myDB> db.students.find({_id:1}, {name:1});
+[ { _id: 1, name: 'Ananya' } ]

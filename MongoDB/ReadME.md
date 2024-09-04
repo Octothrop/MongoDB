@@ -20,3 +20,7 @@
 5. `db.insert.collection_name({document ...}, {document ...}, ...);` - used to insert documents into the collection
 6. `db.collection_name.updateMany({ filter_criteria }, { $set: { field: value } }, { upsert: true });` - updates value if present else inserts the new document into the collection
 7. `db.dropDatabase();` - drops the current database
+8. `show collections;` - displays all collection in the current database
+9. `db.collection_name.save({_id: ObjectId(), new_data})` -  creates documnet if not present else replaces existing document with new document
+10. `db.collection_name.remove({deletion criteria} {justOne: boo;l});` - delete documents from a collection
+11. `db.students.update({criteria}, {$unset: {key:field}});` -  remove field form the existing document
