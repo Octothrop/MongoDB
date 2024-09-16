@@ -1,0 +1,169 @@
+
+test> students.find({});
+ReferenceError: students is not defined
+test> db.students.find({});
+
+test> db.students.insert({ _id: 1, name: 'Ananya', location: 'Udupi', hobbies: 'Read' });
+DeprecationWarning: Collection.insert() is deprecated. Use insertOne, insertMany, or bulkWrite.
+{ acknowledged: true, insertedIds: { '0': 1 } }
+test> db.students.insert({ _id: 2, name: 'Avani', location: 'Kundapura', hobbies: 'Write' });
+{ acknowledged: true, insertedIds: { '0': 2 } }
+test> db.students.find({});
+[
+  { _id: 1, name: 'Ananya', location: 'Udupi', hobbies: 'Read' },
+  { _id: 2, name: 'Avani', location: 'Kundapura', hobbies: 'Write' }
+]
+test> db.students.find({_id:1}, {name:1, hobbies:1});
+[ { _id: 1, name: 'Ananya', hobbies: 'Read' } ]
+test> db.students.find({_id:1}, {name:1, hobbies:1, _id:0});
+[ { name: 'Ananya', hobbies: 'Read' } ]
+test> db.students.find({hobbies:{$eq:'Read'}}).pretty();
+[ { _id: 1, name: 'Ananya', location: 'Udupi', hobbies: 'Read' } ]
+test> db.students.find({hobbies: 'Read'}).pretty();
+[ { _id: 1, name: 'Ananya', location: 'Udupi', hobbies: 'Read' } ]
+test> db.students.find({hobbies: {$ne:'Read'}}).pretty();
+[ { _id: 2, name: 'Avani', location: 'Kundapura', hobbies: 'Write' } ]
+test> db.students.find({hobbies: {$in:['Read', 'notRead']}}).pretty();
+[ { _id: 1, name: 'Ananya', location: 'Udupi', hobbies: 'Read' } ]
+test> db.students.find({hobbies: {$nin:['Read', 'notRead']}}).pretty();
+[ { _id: 2, name: 'Avani', location: 'Kundapura', hobbies: 'Write' } ]
+test> db.students.find({name: 'Ananya', hobbies:'Read'}, {name:1, hobbies:1});
+[ { _id: 1, name: 'Ananya', hobbies: 'Read' } ]
+test> db.students.find({name: 'Ananya', hobbies:'Read'});
+[ { _id: 1, name: 'Ananya', location: 'Udupi', hobbies: 'Read' } ]
+test> db.students.find({name:/^A/}).pretty();
+[
+  { _id: 1, name: 'Ananya', location: 'Udupi', hobbies: 'Read' },
+  { _id: 2, name: 'Avani', location: 'Kundapura', hobbies: 'Write' }
+]
+test> db.students.find({name:/A$/}).pretty();
+
+test> db.students.find({name:/a$/}).pretty();
+[ { _id: 1, name: 'Ananya', location: 'Udupi', hobbies: 'Read' } ]
+test> db.students.find({name:/y/}).pretty();
+[ { _id: 1, name: 'Ananya', location: 'Udupi', hobbies: 'Read' } ]
+test> db.students.find({name:{$regex:y}}).pretty();
+ReferenceError: y is not defined
+test> db.students.find({name:{$regex:'y'}}).pretty();
+[ { _id: 1, name: 'Ananya', location: 'Udupi', hobbies: 'Read' } ]
+test> db.students.find({name:{$regex:'a$'}}).pretty();
+[ { _id: 1, name: 'Ananya', location: 'Udupi', hobbies: 'Read' } ]
+test> db.students.find({name:{$regex:'^A'}}).pretty();
+[
+  { _id: 1, name: 'Ananya', location: 'Udupi', hobbies: 'Read' },
+  { _id: 2, name: 'Avani', location: 'Kundapura', hobbies: 'Write' }
+]
+test> db.students.find({{$or:[{_id:1}, {_id:2}]).pretty();
+Uncaught:
+SyntaxError: Unexpected token (1:18)
+
+> 1 | db.students.find({{$or:[{_id:1}, {_id:2}]).pretty();
+    |                   ^
+  2 |
+
+test> db.students.find({$or:[{_id:1}, {_id:2}]).pretty();
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:40)
+
+> 1 | db.students.find({$or:[{_id:1}, {_id:2}]).pretty();
+    |                                         ^
+  2 |
+
+test> db.students.find({$or:[{_id:1}, {_id:2}]}).pretty();
+[
+  { _id: 1, name: 'Ananya', location: 'Udupi', hobbies: 'Read' },
+  { _id: 2, name: 'Avani', location: 'Kundapura', hobbies: 'Write' }
+]
+test> db.students.update({_id:1}, {$set: {location: null}});
+DeprecationWarning: Collection.update() is deprecated. Use updateOne, updateMany, or bulkWrite.
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+test> db.students.update({_id:2}, {$set: {location: null}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+test> db.students.find({$or:[{_id:1}, {_id:2}]).pretty();
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:40)
+
+> 1 | db.students.find({$or:[{_id:1}, {_id:2}]).pretty();
+    |                                         ^
+  2 |
+
+test> db.students.find({$or:[{_id:1}, {_id:2}]}).pretty();
+[
+  { _id: 1, name: 'Ananya', location: null, hobbies: 'Read' },
+  { _id: 2, name: 'Avani', location: null, hobbies: 'Write' }
+]
+test> db.students.find({location: null}).pretty();
+[
+  { _id: 1, name: 'Ananya', location: null, hobbies: 'Read' },
+  { _id: 2, name: 'Avani', location: null, hobbies: 'Write' }
+]
+test> db.students.insert({_id: 3, name:"Avisha", location:"Karkala", hobbies:"Sing"});
+{ acknowledged: true, insertedIds: { '0': 3 } }
+test> db.students.find({location: null}).pretty();
+[
+  { _id: 1, name: 'Ananya', location: null, hobbies: 'Read' },
+  { _id: 2, name: 'Avani', location: null, hobbies: 'Write' }
+]
+test> db.students.update({_id:1}, {$unset: {location:null}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+test> db.students.find({}).pretty();
+[
+  { _id: 1, name: 'Ananya', hobbies: 'Read' },
+  { _id: 2, name: 'Avani', location: null, hobbies: 'Write' },
+  { _id: 3, name: 'Avisha', location: 'Karkala', hobbies: 'Sing' }
+]
+test> db.students.count();
+DeprecationWarning: Collection.count() is deprecated. Use countDocuments or estimatedDocumentCount.
+3
+test> db.students.count({location: 'Udupi'});
+0
+test> db.students.count({location: 'Udupi'});
+0
+test> db.students.update({_id:1}, {$set: {location:'Karkala'}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+test> db.students.count({location: 'Karkala'}).limit(1).pretty();
+TypeError: db.students.co ... ala'}).limit is not a function
+test> db.students.find({location: 'Karkala'}).limit(1).pretty();
+[ { _id: 1, name: 'Ananya', hobbies: 'Read', location: 'Karkala' } ]
+test> db.students.find({location: 'Karkala'}).limit(2).pretty();
+[
+  { _id: 1, name: 'Ananya', hobbies: 'Read', location: 'Karkala' },
+  { _id: 3, name: 'Avisha', location: 'Karkala', hobbies: 'Sing' }
+]
+test> db.students.find().sort({name:1}).pretty();
+[
+  { _id: 1, name: 'Ananya', hobbies: 'Read', location: 'Karkala' },
+  { _id: 2, name: 'Avani', location: null, hobbies: 'Write' },
+  { _id: 3, name: 'Avisha', location: 'Karkala', hobbies: 'Sing' }
+]
+test> db.students.find().sort({name:-1}).pretty();
+[
+  { _id: 3, name: 'Avisha', location: 'Karkala', hobbies: 'Sing' },
+  { _id: 2, name: 'Avani', location: null, hobbies: 'Write' },
+  { _id: 1, name: 'Ananya', hobbies: 'Read', location: 'Karkala' }
+]
+test>

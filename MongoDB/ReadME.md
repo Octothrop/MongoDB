@@ -24,3 +24,11 @@
 9. `db.collection_name.save({_id: ObjectId(), new_data})` -  creates documnet if not present else replaces existing document with new document
 10. `db.collection_name.remove({deletion criteria} {justOne: boo;l});` - delete documents from a collection
 11. `db.students.update({criteria}, {$unset: {key:field}});` -  remove field form the existing document
+12. `db.collection_name.find({find_criteria}, {visibility});` - to find elements based on some predefined criteria
+13. `$nin` : neither nor
+14. `$in` : either or or
+15. `/^letter_starts_with/ - /letter_end_with$/ - /letter_anywhere/` 
+16. `$regex`
+17. `"fruits.1":"grapes"` : gives all doc at which grapes ia at pos 1 in array or position 2
+18. `db.food.find({fruits:{$size:2}});` : gives all fruits whose size 2
+19. `[0, 2]` starting from  0 2 values

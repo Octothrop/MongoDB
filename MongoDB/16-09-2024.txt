@@ -1,0 +1,448 @@
+test> db.createCollection("food");
+{ ok: 1 }
+
+test> db.food.insert({_id:1, fruits: ["Banana", "apple", "cherry"]});
+DeprecationWarning: Collection.insert() is deprecated. Use insertOne, insertMany, or bulkWrite.
+{ acknowledged: true, insertedIds: { '0': 1 } }
+
+test> db.food.insertOne({_id:2, fruits: ["orange", "butterfruit", "mango"]});
+{ acknowledged: true, insertedId: 2 }
+
+test> db.food.insertOne({_id:3, fruits: ["pinapple", "strawberry", "grapes"]});
+{ acknowledged: true, insertedId: 3 }
+
+test> db.food.insertOne({_id:4, fruits: ["banana", "strawberry", "grapes"]});
+{ acknowledged: true, insertedId: 4 }
+
+test> db.food.insertOne({_id:5, fruits: ["orange", "grapes"]});
+{ acknowledged: true, insertedId: 5 }
+
+test> db.food.find({}).pretty();
+[
+  { _id: 1, fruits: [ 'Banana', 'apple', 'cherry' ] },
+  { _id: 2, fruits: [ 'orange', 'butterfruit', 'mango' ] },
+  { _id: 3, fruits: [ 'pinapple', 'strawberry', 'grapes' ] },
+  { _id: 4, fruits: [ 'banana', 'strawberry', 'grapes' ] },
+  { _id: 5, fruits: [ 'orange', 'grapes' ] }
+]
+
+test> db.food.find({fruits:["Banana", "apple", "cherry"]}).pretty();
+[ { _id: 1, fruits: [ 'Banana', 'apple', 'cherry' ] } ]
+
+test> db.food.find({fruits:"orange"}).pretty();
+[
+  { _id: 2, fruits: [ 'orange', 'butterfruit', 'mango' ] },
+  { _id: 5, fruits: [ 'orange', 'grapes' ] }
+]
+
+test> db.food.find({"fruits.1":"grapes"}).pretty();
+[ { _id: 5, fruits: [ 'orange', 'grapes' ] } ]
+
+test> db.food.find({"fruits.2":"grapes"}).pretty();
+[
+  { _id: 3, fruits: [ 'pinapple', 'strawberry', 'grapes' ] },
+  { _id: 4, fruits: [ 'banana', 'strawberry', 'grapes' ] }
+]
+
+test> db.food.find({fruits:{$size:2}});
+[ { _id: 5, fruits: [ 'orange', 'grapes' ] } ]
+
+test> db.food.find({fruits:{$size:3}});
+[
+  { _id: 1, fruits: [ 'Banana', 'apple', 'cherry' ] },
+  { _id: 2, fruits: [ 'orange', 'butterfruit', 'mango' ] },
+  { _id: 3, fruits: [ 'pinapple', 'strawberry', 'grapes' ] },
+  { _id: 4, fruits: [ 'banana', 'strawberry', 'grapes' ] }
+]
+
+test> db.food.find({_id:1},{fruits:{$slice:[0,2]}});
+[ { _id: 1, fruits: [ 'Banana', 'apple' ] } ]
+
+test> db.food.find({_id:1},{fruits:{$slice:[2, 3]}});
+[ { _id: 1, fruits: [ 'cherry' ] } ]
+
+test> db.food.update({_id:4},{$set: {"fruits.1":"apple"}});
+DeprecationWarning: Collection.update() is deprecated. Use updateOne, updateMany, or bulkWrite.
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+
+test> db.food.find({_id:4});
+[ { _id: 4, fruits: [ 'banana', 'apple', 'grapes' ] } ]
+
+test> show collections;
+food
+students
+
+test> db.food.find({_id:1});
+[ { _id: 1, fruits: [ 'Banana', 'apple', 'cherry' ] } ]
+
+test> db.food.update({_id:4, fruits:"apple"},{$set: {"fruits.1":"An apple"}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+
+test> db.food.find({_id:1});
+[ { _id: 1, fruits: [ 'Banana', 'apple', 'cherry' ] } ]
+
+test> db.food.update({_id:4, fruits:"apple"},{$set: {fruits:"An apple"}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+
+test> db.food.find({_id:1});
+[ { _id: 1, fruits: [ 'Banana', 'apple', 'cherry' ] } ]
+
+test> db.food.update({_id:4, fruits:"apple"},{$set: {fruits:"An apple"}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+
+test> db.food.update({_id:4, fruits:"apple"},{$set: {"fruits.1":"An apple"}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+
+test> db.food.update({_id:1, fruits:"apple"},{$set: {"fruits.1":"An apple"}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+
+test> db.food.find({_id:1});
+[ { _id: 1, fruits: [ 'Banana', 'An apple', 'cherry' ] } ]
+
+test> db.food.update({_id:1, fruits:"apple"},{$set: {"fruits.0":"An An apple"}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+
+test> db.food.find({_id:1});
+[ { _id: 1, fruits: [ 'Banana', 'An apple', 'cherry' ] } ]
+
+test> db.food.update({_id:1, fruits:"apple"},{$set: {fruits:"An An apple"}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+test> db.food.find({_id:1});
+[ { _id: 1, fruits: [ 'Banana', 'An apple', 'cherry' ] } ]
+test> db.food.update({_id:1, fruits:"An apple"},{$set: {fruits:"An An apple"}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+test> db.food.find({_id:1});
+[ { _id: 1, fruits: 'An An apple' } ]
+test> db.food.update({_id:1, fruits:"An apple"},{$set: {fruits:[ 'Banana', 'An apple', 'cherry' ]}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+test> db.food.update({_id:1, fruits:"An An apple"},{$set: {fruits:[ 'Banana', 'An apple', 'cherry' ]}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+test> db.food.find({_id:1});
+[ { _id: 1, fruits: [ 'Banana', 'An apple', 'cherry' ] } ]
+test> db.food.update({_id:1, fruits:"An apple"},{$set: {fruits:"Orange"}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+test> db.food.find({_id:1});
+[ { _id: 1, fruits: 'Orange' } ]
+test> db.food.update({_id:1, fruits:"Orange"},{$set: {fruits:[ 'Banana', 'An apple', 'cherry' ]}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+test> db.food.update({_id:1, fruits:"An apple"},{$set: {"fruits.1":"Orange"}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+test> db.food.find({_id:1});
+[ { _id: 1, fruits: [ 'Banana', 'Orange', 'cherry' ] } ]
+test> db.food.update({_id:2}, {$push: {price:{orange:60, butterfruit:200, mango:120}}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+test> db.food.find({_id:2});
+[
+  {
+    _id: 2,
+    fruits: [ 'orange', 'butterfruit', 'mango' ],
+    price: [ { orange: 60, butterfruit: 200, mango: 120 } ]
+  }
+]
+test> db.food.find({_id:2}).pretty();
+[
+  {
+    _id: 2,
+    fruits: [ 'orange', 'butterfruit', 'mango' ],
+    price: [ { orange: 60, butterfruit: 200, mango: 120 } ]
+  }
+]
+test> db.food.insertOne({fruits: ["banana", "strawberry", "grapes"]});
+{
+  acknowledged: true,
+  insertedId: ObjectId('66e7f3fb86fe6a7f8f2710bc')
+}
+test> db.food.find().pretty();
+[
+  { _id: 1, fruits: [ 'Banana', 'Orange', 'cherry' ] },
+  {
+    _id: 2,
+    fruits: [ 'orange', 'butterfruit', 'mango' ],
+    price: [ { orange: 60, butterfruit: 200, mango: 120 } ]
+  },
+  { _id: 3, fruits: [ 'pinapple', 'strawberry', 'grapes' ] },
+  { _id: 4, fruits: [ 'banana', 'An apple', 'grapes' ] },
+  { _id: 5, fruits: [ 'orange', 'grapes' ] },
+  {
+    _id: ObjectId('66e7f3fb86fe6a7f8f2710bc'),
+    fruits: [ 'banana', 'strawberry', 'grapes' ]
+  }
+]
+test> db.food.update({_id:4}, {$addToSet:{fruits:"orange"}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+test> db.food.find();
+[
+  { _id: 1, fruits: [ 'Banana', 'Orange', 'cherry' ] },
+  {
+    _id: 2,
+    fruits: [ 'orange', 'butterfruit', 'mango' ],
+    price: [ { orange: 60, butterfruit: 200, mango: 120 } ]
+  },
+  { _id: 3, fruits: [ 'pinapple', 'strawberry', 'grapes' ] },
+  { _id: 4, fruits: [ 'banana', 'An apple', 'grapes', 'orange' ] },
+  { _id: 5, fruits: [ 'orange', 'grapes' ] },
+  {
+    _id: ObjectId('66e7f3fb86fe6a7f8f2710bc'),
+    fruits: [ 'banana', 'strawberry', 'grapes' ]
+  }
+]
+test> db.food.update({_id:4}, {$pop:{fruit:1}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+test> db.food.find({_id:4}).pretty();
+[ { _id: 4, fruits: [ 'banana', 'An apple', 'grapes', 'orange' ] } ]
+test> db.food.update({_id:4}, {$pop:{fruits:1}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+test> db.food.find({_id:4}).pretty();
+[ { _id: 4, fruits: [ 'banana', 'An apple', 'grapes' ] } ]
+test> db.food.update({_id:4}, {$pop:{fruits:2}});
+MongoServerError: $pop expects 1 or -1, found: 2
+test> db.food.update({_id:4}, {$pop:{fruits:-1}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+test> db.food.find({_id:4}).pretty();
+[ { _id: 4, fruits: [ 'An apple', 'grapes' ] } ]
+test> db.food.update({_id:3}, {$pullAll:{fruits:["pineapple", "grapes"]}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+test> db.food.find({_id:3}).pretty();
+[ { _id: 3, fruits: [ 'pinapple', 'strawberry' ] } ]
+test> db.food.update({_id:3}, {$pullAll:{fruits:["pinapple", "grapes"]}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+test> db.food.find({_id:3}).pretty();
+[ { _id: 3, fruits: [ 'strawberry' ] } ]
+test>  db.food.update({fruits:"banana"},{$pull:{fruits:"banana"}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+test> db.food.find();
+[
+  { _id: 1, fruits: [ 'Banana', 'Orange', 'cherry' ] },
+  {
+    _id: 2,
+    fruits: [ 'orange', 'butterfruit', 'mango' ],
+    price: [ { orange: 60, butterfruit: 200, mango: 120 } ]
+  },
+  { _id: 3, fruits: [ 'strawberry' ] },
+  { _id: 4, fruits: [ 'An apple', 'grapes' ] },
+  { _id: 5, fruits: [ 'orange', 'grapes' ] },
+  {
+    _id: ObjectId('66e7f3fb86fe6a7f8f2710bc'),
+    fruits: [ 'strawberry', 'grapes' ]
+  }
+]
+test>  db.food.update({fruits:"Banana"},{$pull:{fruits:"Banana"}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+test> db.food.find();
+[
+  { _id: 1, fruits: [ 'Orange', 'cherry' ] },
+  {
+    _id: 2,
+    fruits: [ 'orange', 'butterfruit', 'mango' ],
+    price: [ { orange: 60, butterfruit: 200, mango: 120 } ]
+  },
+  { _id: 3, fruits: [ 'strawberry' ] },
+  { _id: 4, fruits: [ 'An apple', 'grapes' ] },
+  { _id: 5, fruits: [ 'orange', 'grapes' ] },
+  {
+    _id: ObjectId('66e7f3fb86fe6a7f8f2710bc'),
+    fruits: [ 'strawberry', 'grapes' ]
+  }
+]
+test>  db.food.update({},{$pull:{fruits:"cherry"}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+test> db.food.find();
+[
+  { _id: 1, fruits: [ 'Orange' ] },
+  {
+    _id: 2,
+    fruits: [ 'orange', 'butterfruit', 'mango' ],
+    price: [ { orange: 60, butterfruit: 200, mango: 120 } ]
+  },
+  { _id: 3, fruits: [ 'strawberry' ] },
+  { _id: 4, fruits: [ 'An apple', 'grapes' ] },
+  { _id: 5, fruits: [ 'orange', 'grapes' ] },
+  {
+    _id: ObjectId('66e7f3fb86fe6a7f8f2710bc'),
+    fruits: [ 'strawberry', 'grapes' ]
+  }
+]
+test> db.createCollection("Customers");
+{ ok: 1 }
+test>  db.Customers.insertMany([{CustID:"C123",AccBal:500,AccType:"S"},{CustID:"C123",AccBal:900,AccType:"S"},{CustID:"C111",AccBal:1200,AccType:"S"},{CustID:"C123",AccBal:1500,AccType:"C"}]);
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('66e7f68186fe6a7f8f2710bd'),
+    '1': ObjectId('66e7f68186fe6a7f8f2710be'),
+    '2': ObjectId('66e7f68186fe6a7f8f2710bf'),
+    '3': ObjectId('66e7f68186fe6a7f8f2710c0')
+  }
+}
+test> db.Customers.find().pretty();
+[
+  {
+    _id: ObjectId('66e7f68186fe6a7f8f2710bd'),
+    CustID: 'C123',
+    AccBal: 500,
+    AccType: 'S'
+  },
+  {
+    _id: ObjectId('66e7f68186fe6a7f8f2710be'),
+    CustID: 'C123',
+    AccBal: 900,
+    AccType: 'S'
+  },
+  {
+    _id: ObjectId('66e7f68186fe6a7f8f2710bf'),
+    CustID: 'C111',
+    AccBal: 1200,
+    AccType: 'S'
+  },
+  {
+    _id: ObjectId('66e7f68186fe6a7f8f2710c0'),
+    CustID: 'C123',
+    AccBal: 1500,
+    AccType: 'C'
+  }
+]
+test>
